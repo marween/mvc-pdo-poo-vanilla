@@ -13,19 +13,24 @@ class Router
                 require_once('models/' . $class . '.php');
             });
             $url = '';
-
+            $action = '';
             //LE CONTROLLER EST INCLUS SELON L'ACTION DE L'UTILISATEIR
             if (isset($_GET['url'])) {
-                $url = explode('/', filter_var($_GET['url'],
-                    FILTER_SANTIZE_URL));
+                //$url = explode('/', ($_GET['url']));
+                $url = $_GET['url'];
 
-                $controller = ucfirst(strtolower($url[0]));
+                $url = ucfirst(strtolower($url));
+                $pos = strpos($url, '/');
+                $controller = substr($url,0,$pos);
+                $action = substr(($url), $pos+1);
+
                 $controllerClass = "controller" .$controller;
                 $controllerFile  = "controllers/".$controllerClass. ".php";
 
                 if(file_exists($controllerFile)){
                     require_once($controllerFile);
-                    $this->_ctr = new $controllerClass($url);
+                    $this->_ctrl = new $controllerClass($url);
+                    $this->_ctrl->$action();
                 }
                 else
                     throw new Exception ('page introuvable');
@@ -35,7 +40,7 @@ class Router
                 $this->_ctrl = new ControllerAccueil($url);
             }
         }
-        // GESTION DES ERREUR
+            // GESTION DES ERREUR
         catch (Exception $e) {
             $errorMsg = $e->getMessage();
             $this->_vieuw = new View('Error');
@@ -44,4 +49,3 @@ class Router
     }
 
 }
-

@@ -5,4 +5,14 @@
     <p> Debut: <?= $value->start() ?></p>
     <p> Fin: <?= $value->end() ?></p>
 
+    <form action="index.php?url=accueil/participation" method="post">
+    <?php
+
+        $form = new Form;
+        echo 'firstname' .  $form->input('firstname');
+        echo 'lastname' .  $form->input('lastname');
+        echo 'email' . $form->email('email');
+        echo $form->submit();
+    ?>
+    </form>
 <?php endforeach; ?>
